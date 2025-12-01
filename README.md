@@ -93,24 +93,77 @@ if __name__ == "__main__":
 Comando de Execução:
 
 ```bash
-python3 ransomware.py
+python ransomware.py
 ```
 Log de Saída Esperado:
 ```text
 Ransomware executado! Arquivos criptografados!
 ```
+Evidência Visual:
 
+Antes da execução do ransomware:
+![](Images/dados_antesR.png)
+![](Images/senhas_antesR.png)
 
+depois da execução do ransomware:
+![](Images/dados_depoisR.png)
+![](Images/senhas_depoisR.png)
 
-🛡️ Análise e Mitigação do Ransomware
-Análise da Vulnerabilidade
-O ataque é eficaz porque usa uma criptografia forte (Fernet), exige pouca interação do usuário (basta que o script seja executado uma única vez) e a chave fica inacessível ao usuário. O sucesso do ataque depende da falha de controle de execução e da ausência de backups no momento da infecção.
+## Descriptografia de arquivos
 
-Recomendações de Segurança (Defesa)
-Backup Imediato (Regra 3-2-1): A defesa mais crucial é manter backups recentes, preferencialmente seguindo a regra 3-2-1 (3 cópias, em 2 mídias diferentes, 1 cópia fora do local/offline). Isso torna o resgate desnecessário.
+### Solução e Reversão do Ataque (Descriptografia)
+Para provar que o ataque é reversível e para demonstrar o controle completo sobre o vetor de ameaça, a chave (chave.key) gerada pelo script de Ransomware é usada no processo de descriptografia.
 
-Princípio do Mínimo Privilégio: Limitar as permissões de acesso do usuário. Se o usuário infectado não tiver permissão para gravar/modificar arquivos de sistema ou pastas importantes, o dano do ransomware será contido.
+### Script de Descriptografia (descriptografador.py)
+A função principal do script de solução é reverter a criptografia. Ele carrega a mesma chave gerada, encontra os arquivos afetados e aplica a função f.decrypt() para restaurar os dados originais.
 
-Endpoint Detection and Response (EDR): Utilizar soluções avançadas (EDR) que detectam o comportamento do ransomware (tentativas rápidas e em massa de criptografar arquivos) e não apenas a assinatura do arquivo.
+```bash
+from cryptography.fernet import Fernet
+import os
 
-Conscientização do Usuário (Phishing): A maioria dos ransomwares é distribuída via anexos de e-mail ou links maliciosos. Treinamento constante para evitar clicar em fontes não confiáveis é vital.
+def carregar_chave():
+    return open("chave.key", "rb").read()
+
+def descriptografar_arquivo(arquivo, chave):
+    f = Fernet(chave)
+    with open(arquivo, "rb") as file:
+        dados = file.read()
+    dados_descriptografados = f.decrypt(dados)
+    with open(arquivo, "wb") as file:
+        file.write(dados_descriptografados)
+
+def encontrar_arquivos(diretorio):
+    lista = []
+    for raiz, _, arquivos in os.walk(diretorio):
+        for nome in arquivos:
+            caminho = os.path.join(raiz, nome)
+            if nome != "ransomware.py" and not nome.endswith(".key"):
+                lista.append(caminho)
+    return lista
+
+def main():
+    chave = carregar_chave()
+    arquivos = encontrar_arquivos("test_files")
+    for arquivo in arquivos:
+        descriptografar_arquivo(arquivo, chave)
+    print("Arquivos restaurados com sucesso")
+
+if __name__== "__main__":
+    main()
+```
+### Execução e Evidências
+Comando de Execução:
+
+```bash
+python descriptografar.py
+```
+Log de Saída Esperado:
+```text
+Arquivos restaurados com sucesso
+```
+
+Evidência Visual:
+
+Depois da execução do código:
+![](Images/dados_antesR.png)
+![](Images/senhas_antesR.png)
