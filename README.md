@@ -165,5 +165,31 @@ Arquivos restaurados com sucesso
 Evidência Visual:
 
 Depois da execução do código:
-![](Images/dados_antesR.png)
-![](Images/senhas_antesR.png)
+![](Images/dadosrestaurados.png)
+
+
+
+## Reflexão e Estratégias de Defesa (Ransomware)
+
+O ataque de Ransomware demonstrou a simplicidade com que dados podem ser sequestrados usando bibliotecas de criptografia padrão e acessíveis como o Fernet em Python. A defesa contra essa ameaça deve ser implementada em múltiplas camadas, visando prevenção, detecção de comportamento e recuperação.
+
+1. Análise da Vulnerabilidade e Pontos de Entrada
+O sucesso do ransomware dependeu de três fatores principais:
+- Vetor de Execução: O script precisa ser executado (geralmente por meio de phishing, anexos de e-mail maliciosos ou downloads disfarçados). Isso explora a brecha humana e a falha do usuário em validar a origem do arquivo.
+- Controle de Execução: A máquina host (Kali) permitiu que o script Python fosse executado sem ser bloqueado por soluções antivírus (que podem não reconhecer a "assinatura" do script, mas apenas o seu comportamento).
+- Acesso a Arquivos: O processo conseguiu acesso de leitura/escrita aos arquivos na pasta test_files sem restrições.
+
+2. Estratégias de Mitigação e Defesa (Blue Team)
+As defesas contra Ransomware devem cobrir o ciclo de vida completo da infecção:
+A. Recuperação (Última Linha de Defesa)
+- Backup Imediato (Regra 3-2-1): A defesa mais crucial. Manter 3 cópias dos dados, em 2 mídias diferentes, sendo 1 cópia offline (fora do local ou na nuvem com controle de versão rigoroso). Se você tem um backup recente e offline, o pagamento do resgate é desnecessário.
+- Controle de Versão: Usar sistemas que mantêm histórico de arquivos (como Shadow Copies no Windows ou versionamento em serviços de nuvem) para reverter o arquivo para um estado anterior à criptografia.
+
+B. Detecção e Resposta (Fase Ativa)
+- Endpoint Detection and Response (EDR): Utilizar soluções que não dependem da assinatura do arquivo, mas sim do comportamento. Um EDR detecta e interrompe o processo que está tentando criptografar arquivos em massa rapidamente, isolando o host infectado.
+- Análise Heurística: Configurar ferramentas antivírus e de segurança para sinalizar scripts ou executáveis que tentam ler e escrever um grande número de arquivos em rápida sucessão, o que é um comportamento típico de ransomware.
+
+C. Prevenção (Fase Passiva)
+- Princípio do Mínimo Privilégio: Limitar rigorosamente o acesso do usuário a pastas e arquivos que ele não precisa para o trabalho diário. Se o script for executado por um usuário com privilégios limitados, o dano será contido.
+- Conscientização do Usuário: Treinamento contínuo contra ataques de phishing, spear-phishing e engenharia social. A educação é a maneira mais eficaz de impedir que o vetor de execução inicial (o clique) ocorra.
+- Application Whitelisting: Usar políticas que permitem a execução de apenas aplicativos e scripts conhecidos e confiáveis, bloqueando qualquer código não autorizado (incluindo o ransomware.py).
