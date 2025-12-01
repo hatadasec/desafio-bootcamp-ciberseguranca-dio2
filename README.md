@@ -1,15 +1,15 @@
-# Desafio de Cibersegurança: Ransomware e Keylogger
+# Desafio de Cibersegurança: Ransomware
 
 ## Sobre o Projeto
-Este projeto documenta a exploração e análise de vulnerabilidades relacionadas à segurança de endpoints, com foco na simulação do comportamento de **Ransomware** e **Keylogger** em um ambiente 100% controlado[cite: 1, 3]. [cite_start]O objetivo é demonstrar como essas ameaças digitais funcionam, como capturam ou sequestram dados, e, principalmente, como podemos **detectar, mitigar e nos proteger** delas no mundo real[cite: 1, 4].
+Este projeto documenta a simulação do comportamento de um **Ransomware** em um ambiente 100% controlado. O objetivo é demonstrar como essa ameaça digital funciona, como captura ou sequestra dados, e, principalmente, como podemos **detectar, mitigar e nos proteger** dela no mundo real.
 
 ---
 
 ## Ambiente e Ferramentas
-* **Linguagem:** Python 3 (para os scripts de simulação)
+* **Linguagem:** Python (para os scripts de simulação)
 * **Ambiente:** Máquina virtual Linux (Kali Linux)
-* **Ferramentas Simuladas:** Ransomware (criptografia/descriptografia) e Keylogger (captura de teclado e exfiltração) [cite: 1]
-* **Entrega:** Repositório público no GitHub com arquivo `README.md` detalhado e pasta `/Images` [cite: 2]
+* **Ferramenta Simulada:** Ransomware (criptografia/descriptografia).
+* **Entrega:** Repositório público no GitHub com arquivo `README.md` detalhado e pasta `/Images`
 
 ## Cenário 1: Ransomware (Criptografia de Arquivos)
 Este cenário simula o comportamento de um ransomware real, gerando uma chave de criptografia, localizando arquivos de teste (test_files) e os criptografando, deixando para trás uma mensagem de resgate.
